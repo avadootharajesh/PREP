@@ -16,3 +16,26 @@ def can_express(n, k):
 print(can_express(17, 3))  # True
 print(can_express(15, 2))  # True
 print(can_express(15, 3))  # False
+
+from functools import lru_cache
+
+def can_express(n, k):
+    powers = []
+    x = 1
+    while (p := x ** k) <= n:
+        powers.append(p)
+        x += 1
+
+    @lru_cache(None)
+    def dfs(i, rem):
+        if rem == 0:
+            return True
+        if rem < 0 or i == len(powers):
+            return False
+
+        return dfs(i + 1, rem) or dfs(i + 1, rem - powers[i])
+
+    return dfs(0, n)
+
+
+print(can_express(100, 2))
