@@ -27,3 +27,42 @@ def count_ways(n, k):
             dp[s] += dp[s - p]
 
     return dp[n]
+
+def print_ways(n, k):
+    powers = []
+    x = 1
+    while (p := x ** k) <= n:
+        powers.append(p)
+        x += 1
+
+    ways = []
+
+    def dfs(i, rem, path):
+        if rem == 0:
+            ways.append(path[:])
+            return
+
+        if rem < 0 or i == len(powers):
+            return
+
+        # Skip current power
+        dfs(i + 1, rem, path)
+
+        # Take current power
+        path.append(powers[i])
+        dfs(i + 1, rem - powers[i], path)
+        path.pop()
+
+    dfs(0, n, [])
+
+    for idx, way in enumerate(ways, 1):
+        print(f"Way {idx}: {' + '.join(map(str, way))} = {n}")
+
+    return ways
+
+
+# Example
+print_ways(100, 2)
+
+print(count_ways(17, 3))  # 2
+print(count_ways(15, 2))  # 4
